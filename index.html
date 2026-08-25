@@ -1,0 +1,1724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Placement Eligibility Checker</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+:root {
+    --primary: #4f46e5;
+    --secondary: #7c3aed;
+    --success: #16a34a;
+    --danger: #dc2626;
+    --warning: #d97706;
+    --bg: #f5f7fb;
+    --card: #ffffff;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+}
+
+body.dark {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #f8fafc;
+    --muted: #cbd5e1;
+    --border: #334155;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    transition: 0.3s;
+}
+
+/* HEADER */
+
+header {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    padding: 22px 6%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-icon {
+    font-size: 35px;
+}
+
+.logo h1 {
+    font-size: 23px;
+}
+
+.logo p {
+    font-size: 12px;
+    opacity: 0.85;
+}
+
+.header-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.header-btn {
+    border: none;
+    background: rgba(255,255,255,0.18);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.header-btn:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+/* MAIN */
+
+.container {
+    width: 90%;
+    max-width: 1300px;
+    margin: 30px auto;
+}
+
+/* HERO */
+
+.hero {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 25px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.05);
+}
+
+.hero h2 {
+    font-size: 30px;
+    margin-bottom: 8px;
+}
+
+.hero p {
+    color: var(--muted);
+}
+
+/* DASHBOARD */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 20px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    display: grid;
+    place-items: center;
+    background: #eef2ff;
+    border-radius: 12px;
+    font-size: 25px;
+}
+
+.stat-card h3 {
+    font-size: 25px;
+}
+
+.stat-card p {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+/* LAYOUT */
+
+.main-grid {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 25px;
+}
+
+/* CARD */
+
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 25px;
+    box-shadow: 0 6px 25px rgba(0,0,0,0.04);
+}
+
+.card-title {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+/* FORM */
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 7px;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: var(--bg);
+    color: var(--text);
+    outline: none;
+}
+
+input:focus,
+select:focus {
+    border-color: var(--primary);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.skill {
+    background: #eef2ff;
+    color: #4338ca;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.skill.active {
+    background: var(--primary);
+    color: white;
+}
+
+.primary-btn {
+    width: 100%;
+    border: none;
+    padding: 14px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+.primary-btn:hover {
+    opacity: 0.9;
+}
+
+/* SEARCH */
+
+.search-area {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.search-area input {
+    flex: 1;
+}
+
+.filter {
+    width: 180px;
+}
+
+/* RESULTS */
+
+.results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.company-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.company-card {
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    padding: 18px;
+    background: var(--card);
+    transition: 0.2s;
+}
+
+.company-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.07);
+}
+
+.company-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.company-name {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.company-role {
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 3px;
+}
+
+.status {
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.eligible {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.not-eligible {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.criteria {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin: 15px 0;
+}
+
+.criteria div {
+    background: var(--bg);
+    padding: 8px;
+    border-radius: 8px;
+    font-size: 11px;
+}
+
+.criteria strong {
+    display: block;
+    font-size: 13px;
+}
+
+.reason {
+    font-size: 12px;
+    padding: 10px;
+    border-radius: 8px;
+    background: #fff7ed;
+    color: #9a3412;
+    margin-bottom: 12px;
+}
+
+.company-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.salary {
+    color: var(--success);
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.apply-btn {
+    border: none;
+    padding: 8px 13px;
+    border-radius: 8px;
+    cursor: pointer;
+    background: var(--primary);
+    color: white;
+    font-size: 12px;
+}
+
+.apply-btn:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+}
+
+/* PROFILE */
+
+.profile-result {
+    display: none;
+    margin-bottom: 25px;
+}
+
+.profile-box {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 20px;
+    align-items: center;
+}
+
+.avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    display: grid;
+    place-items: center;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.profile-info h2 {
+    margin-bottom: 5px;
+}
+
+.profile-info p {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+/* PROGRESS */
+
+.progress-container {
+    margin-top: 15px;
+}
+
+.progress-bar {
+    height: 12px;
+    background: var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    width: 0;
+    transition: 0.5s;
+}
+
+/* MODAL */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 999;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.modal-box {
+    background: var(--card);
+    width: 500px;
+    max-width: 100%;
+    border-radius: 18px;
+    padding: 25px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.close {
+    border: none;
+    background: none;
+    font-size: 25px;
+    cursor: pointer;
+    color: var(--text);
+}
+
+.success-message {
+    text-align: center;
+    padding: 20px;
+}
+
+.success-icon {
+    font-size: 60px;
+}
+
+/* FOOTER */
+
+footer {
+    text-align: center;
+    padding: 30px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width: 950px) {
+    .main-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media(max-width: 650px) {
+    header {
+        padding: 15px;
+    }
+
+    .logo h1 {
+        font-size: 18px;
+    }
+
+    .container {
+        width: 94%;
+    }
+
+    .stats {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .company-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .search-area {
+        flex-direction: column;
+    }
+
+    .filter {
+        width: 100%;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        <div class="logo-icon">🎓</div>
+        <div>
+            <h1>Placement Eligibility Checker</h1>
+            <p>Find companies you're eligible for</p>
+        </div>
+    </div>
+
+    <div class="header-buttons">
+        <button class="header-btn" onclick="toggleDarkMode()">🌙</button>
+        <button class="header-btn" onclick="resetAll()">↻ Reset</button>
+    </div>
+
+</header>
+
+<div class="container">
+
+    <section class="hero">
+        <h2>🚀 Smart Placement Checker</h2>
+        <p>
+            Enter your academic profile and instantly discover which
+            companies you are eligible to apply for.
+        </p>
+    </section>
+
+    <!-- STATISTICS -->
+
+    <section class="stats">
+
+        <div class="stat-card">
+            <div class="stat-icon">🏢</div>
+            <div>
+                <h3 id="totalCompanies">25</h3>
+                <p>Total Companies</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div>
+                <h3 id="eligibleCount">0</h3>
+                <p>Eligible Companies</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">❌</div>
+            <div>
+                <h3 id="notEligibleCount">0</h3>
+                <p>Not Eligible</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div>
+                <h3 id="eligibilityPercent">0%</h3>
+                <p>Eligibility Rate</p>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- PROFILE RESULT -->
+
+    <section class="card profile-result" id="profileResult">
+
+        <div class="profile-box">
+
+            <div class="avatar" id="avatar">S</div>
+
+            <div class="profile-info">
+                <h2 id="profileName">Student</h2>
+                <p id="profileDetails"></p>
+
+                <div class="progress-container">
+                    <p style="margin-bottom:6px;">Overall Eligibility Rate</p>
+
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <div class="main-grid">
+
+        <!-- STUDENT FORM -->
+
+        <section class="card">
+
+            <h2 class="card-title">👤 Student Profile</h2>
+
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="name" placeholder="Enter your name">
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="email" placeholder="student@email.com">
+            </div>
+
+            <div class="form-row">
+
+                <div class="form-group">
+                    <label>Branch</label>
+
+                    <select id="branch">
+                        <option value="">Select Branch</option>
+                        <option>CSE</option>
+                        <option>ISE</option>
+                        <option>ECE</option>
+                        <option>EEE</option>
+                        <option>ME</option>
+                        <option>Civil</option>
+                        <option>AI & ML</option>
+                        <option>Data Science</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Graduation Year</label>
+
+                    <select id="year">
+                        <option value="">Select Year</option>
+                        <option>2026</option>
+                        <option>2027</option>
+                        <option>2028</option>
+                        <option>2029</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="form-row">
+
+                <div class="form-group">
+                    <label>CGPA</label>
+                    <input type="number" id="cgpa"
+                           min="0" max="10" step="0.01"
+                           placeholder="Example: 8.4">
+                </div>
+
+                <div class="form-group">
+                    <label>10th Percentage</label>
+                    <input type="number" id="tenth"
+                           min="0" max="100"
+                           placeholder="Example: 85">
+                </div>
+
+            </div>
+
+            <div class="form-row">
+
+                <div class="form-group">
+                    <label>12th / Diploma %</label>
+                    <input type="number" id="twelfth"
+                           min="0" max="100"
+                           placeholder="Example: 80">
+                </div>
+
+                <div class="form-group">
+                    <label>Backlogs</label>
+                    <input type="number" id="backlogs"
+                           min="0"
+                           placeholder="Example: 0">
+                </div>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Technical Skills</label>
+
+                <div class="skills">
+
+                    <span class="skill" onclick="toggleSkill(this)">Python</span>
+                    <span class="skill" onclick="toggleSkill(this)">Java</span>
+                    <span class="skill" onclick="toggleSkill(this)">C</span>
+                    <span class="skill" onclick="toggleSkill(this)">C++</span>
+                    <span class="skill" onclick="toggleSkill(this)">SQL</span>
+                    <span class="skill" onclick="toggleSkill(this)">HTML</span>
+                    <span class="skill" onclick="toggleSkill(this)">CSS</span>
+                    <span class="skill" onclick="toggleSkill(this)">JavaScript</span>
+                    <span class="skill" onclick="toggleSkill(this)">React</span>
+                    <span class="skill" onclick="toggleSkill(this)">MongoDB</span>
+                    <span class="skill" onclick="toggleSkill(this)">AWS</span>
+                    <span class="skill" onclick="toggleSkill(this)">Linux</span>
+
+                </div>
+
+            </div>
+
+            <button class="primary-btn" onclick="checkEligibility()">
+                🔍 Check My Eligibility
+            </button>
+
+        </section>
+
+        <!-- COMPANY SECTION -->
+
+        <section class="card">
+
+            <div class="results-header">
+
+                <div>
+                    <h2 class="card-title" style="margin:0;">
+                        🏢 Company Opportunities
+                    </h2>
+
+                    <small style="color:var(--muted);">
+                        Compare your profile with company requirements
+                    </small>
+                </div>
+
+            </div>
+
+            <div class="search-area">
+
+                <input
+                    type="text"
+                    id="search"
+                    placeholder="🔎 Search company or role..."
+                    oninput="displayCompanies()"
+                >
+
+                <select
+                    class="filter"
+                    id="eligibilityFilter"
+                    onchange="displayCompanies()"
+                >
+                    <option value="all">All Companies</option>
+                    <option value="eligible">Eligible</option>
+                    <option value="not">Not Eligible</option>
+                </select>
+
+            </div>
+
+            <div class="company-grid" id="companyGrid"></div>
+
+        </section>
+
+    </div>
+
+</div>
+
+<footer>
+    <p>🎓 Placement Eligibility Checker</p>
+    <p>Built with HTML, CSS & JavaScript | Student Project</p>
+</footer>
+
+<!-- APPLICATION MODAL -->
+
+<div class="modal" id="modal">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+            <h2>Application</h2>
+            <button class="close" onclick="closeModal()">×</button>
+        </div>
+
+        <div id="modalContent"></div>
+
+    </div>
+
+</div>
+
+<script>
+
+/* ============================================
+   COMPANY DATABASE
+============================================ */
+
+const companies = [
+
+{
+    name: "TCS",
+    role: "Software Engineer",
+    cgpa: 6.0,
+    tenth: 60,
+    twelfth: 60,
+    backlogs: 1,
+    branch: "all",
+    salary: "₹3.6 - ₹7 LPA"
+},
+
+{
+    name: "Infosys",
+    role: "Systems Engineer",
+    cgpa: 6.0,
+    tenth: 60,
+    twelfth: 60,
+    backlogs: 0,
+    branch: "all",
+    salary: "₹3.6 - ₹8 LPA"
+},
+
+{
+    name: "Wipro",
+    role: "Project Engineer",
+    cgpa: 6.0,
+    tenth: 60,
+    twelfth: 60,
+    backlogs: 1,
+    branch: "all",
+    salary: "₹3.5 - ₹7 LPA"
+},
+
+{
+    name: "Accenture",
+    role: "Associate Software Engineer",
+    cgpa: 6.5,
+    tenth: 60,
+    twelfth: 60,
+    backlogs: 0,
+    branch: "all",
+    salary: "₹4.5 - ₹8 LPA"
+},
+
+{
+    name: "Cognizant",
+    role: "Programmer Analyst",
+    cgpa: 6.5,
+    tenth: 60,
+    twelfth: 60,
+    backlogs: 1,
+    branch: "all",
+    salary: "₹4 - ₹7 LPA"
+},
+
+{
+    name: "Capgemini",
+    role: "Analyst",
+    cgpa: 6.0,
+    tenth: 60,
+    twelfth: 60,
+    backlogs: 0,
+    branch: "all",
+    salary: "₹4 - ₹7 LPA"
+},
+
+{
+    name: "HCLTech",
+    role: "Software Developer",
+    cgpa: 6.0,
+    tenth: 60,
+    twelfth: 60,
+    backlogs: 1,
+    branch: "all",
+    salary: "₹4 - ₹8 LPA"
+},
+
+{
+    name: "Tech Mahindra",
+    role: "Software Engineer",
+    cgpa: 6.0,
+    tenth: 60,
+    twelfth: 60,
+    backlogs: 1,
+    branch: "all",
+    salary: "₹3.5 - ₹6 LPA"
+},
+
+{
+    name: "IBM",
+    role: "Associate Developer",
+    cgpa: 7.0,
+    tenth: 65,
+    twelfth: 65,
+    backlogs: 0,
+    branch: "technical",
+    salary: "₹6 - ₹12 LPA"
+},
+
+{
+    name: "Microsoft",
+    role: "Software Engineer",
+    cgpa: 8.5,
+    tenth: 80,
+    twelfth: 80,
+    backlogs: 0,
+    branch: "technical",
+    salary: "₹15 - ₹30 LPA"
+},
+
+{
+    name: "Google",
+    role: "Software Engineer",
+    cgpa: 8.5,
+    tenth: 80,
+    twelfth: 80,
+    backlogs: 0,
+    branch: "technical",
+    salary: "₹20 - ₹35 LPA"
+},
+
+{
+    name: "Amazon",
+    role: "SDE",
+    cgpa: 7.5,
+    tenth: 70,
+    twelfth: 70,
+    backlogs: 0,
+    branch: "technical",
+    salary: "₹12 - ₹25 LPA"
+},
+
+{
+    name: "Deloitte",
+    role: "Technology Analyst",
+    cgpa: 6.5,
+    tenth: 60,
+    twelfth: 60,
+    backlogs: 0,
+    branch: "all",
+    salary: "₹5 - ₹10 LPA"
+},
+
+{
+    name: "EY",
+    role: "Technology Consultant",
+    cgpa: 6.5,
+    tenth: 60,
+    twelfth: 60,
+    backlogs: 0,
+    branch: "all",
+    salary: "₹4 - ₹9 LPA"
+},
+
+{
+    name: "KPMG",
+    role: "Technology Analyst",
+    cgpa: 6.5,
+    tenth: 60,
+    twelfth: 60,
+    backlogs: 0,
+    branch: "all",
+    salary: "₹4 - ₹8 LPA"
+},
+
+{
+    name: "PwC",
+    role: "Associate",
+    cgpa: 6.5,
+    tenth: 60,
+    twelfth: 60,
+    backlogs: 0,
+    branch: "all",
+    salary: "₹4 - ₹9 LPA"
+},
+
+{
+    name: "Oracle",
+    role: "Software Developer",
+    cgpa: 7.5,
+    tenth: 70,
+    twelfth: 70,
+    backlogs: 0,
+    branch: "technical",
+    salary: "₹8 - ₹16 LPA"
+},
+
+{
+    name: "Cisco",
+    role: "Network Engineer",
+    cgpa: 7.5,
+    tenth: 70,
+    twelfth: 70,
+    backlogs: 0,
+    branch: "technical",
+    salary: "₹8 - ₹18 LPA"
+},
+
+{
+    name: "SAP",
+    role: "Software Developer",
+    cgpa: 7.0,
+    tenth: 65,
+    twelfth: 65,
+    backlogs: 0,
+    branch: "technical",
+    salary: "₹6 - ₹14 LPA"
+},
+
+{
+    name: "Zoho",
+    role: "Software Developer",
+    cgpa: 7.0,
+    tenth: 65,
+    twelfth: 65,
+    backlogs: 0,
+    branch: "technical",
+    salary: "₹5 - ₹12 LPA"
+},
+
+{
+    name: "Mphasis",
+    role: "Software Engineer",
+    cgpa: 6.0,
+    tenth: 60,
+    twelfth: 60,
+    backlogs: 1,
+    branch: "all",
+    salary: "₹4 - ₹7 LPA"
+},
+
+{
+    name: "Persistent",
+    role: "Software Engineer",
+    cgpa: 6.5,
+    tenth: 60,
+    twelfth: 60,
+    backlogs: 0,
+    branch: "technical",
+    salary: "₹5 - ₹10 LPA"
+},
+
+{
+    name: "Mindtree",
+    role: "Software Engineer",
+    cgpa: 6.0,
+    tenth: 60,
+    twelfth: 60,
+    backlogs: 1,
+    branch: "all",
+    salary: "₹4 - ₹7 LPA"
+},
+
+{
+    name: "Hexaware",
+    role: "Graduate Engineer",
+    cgpa: 6.0,
+    tenth: 60,
+    twelfth: 60,
+    backlogs: 0,
+    branch: "all",
+    salary: "₹4 - ₹7 LPA"
+},
+
+{
+    name: "LTIMindtree",
+    role: "Graduate Engineer",
+    cgpa: 6.0,
+    tenth: 60,
+    twelfth: 60,
+    backlogs: 0,
+    branch: "all",
+    salary: "₹4 - ₹8 LPA"
+}
+
+];
+
+
+/* ============================================
+   GLOBAL VARIABLES
+============================================ */
+
+let studentProfile = null;
+
+
+/* ============================================
+   INITIALIZE
+============================================ */
+
+window.onload = function() {
+
+    loadSavedProfile();
+
+    displayCompanies();
+
+    if(localStorage.getItem("darkMode") === "true") {
+        document.body.classList.add("dark");
+    }
+
+};
+
+
+/* ============================================
+   SKILLS
+============================================ */
+
+function toggleSkill(element) {
+
+    element.classList.toggle("active");
+
+}
+
+
+/* ============================================
+   GET SELECTED SKILLS
+============================================ */
+
+function getSkills() {
+
+    const selected = document.querySelectorAll(".skill.active");
+
+    return Array.from(selected).map(skill => skill.innerText);
+
+}
+
+
+/* ============================================
+   CHECK ELIGIBILITY
+============================================ */
+
+function checkEligibility() {
+
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const branch = document.getElementById("branch").value;
+    const year = document.getElementById("year").value;
+
+    const cgpa = parseFloat(document.getElementById("cgpa").value);
+    const tenth = parseFloat(document.getElementById("tenth").value);
+    const twelfth = parseFloat(document.getElementById("twelfth").value);
+    const backlogs = parseInt(document.getElementById("backlogs").value);
+
+    if(!name || !email || !branch || !year ||
+       isNaN(cgpa) || isNaN(tenth) ||
+       isNaN(twelfth) || isNaN(backlogs)) {
+
+        alert("⚠️ Please fill all student details.");
+        return;
+    }
+
+    if(cgpa > 10 || tenth > 100 || twelfth > 100) {
+
+        alert("⚠️ Please enter valid academic marks.");
+        return;
+    }
+
+    studentProfile = {
+
+        name,
+        email,
+        branch,
+        year,
+        cgpa,
+        tenth,
+        twelfth,
+        backlogs,
+        skills: getSkills()
+
+    };
+
+    localStorage.setItem(
+        "studentProfile",
+        JSON.stringify(studentProfile)
+    );
+
+    showProfile();
+
+    displayCompanies();
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}
+
+
+/* ============================================
+   ELIGIBILITY LOGIC
+============================================ */
+
+function checkCompanyEligibility(company) {
+
+    if(!studentProfile) {
+
+        return {
+            eligible: false,
+            reason: "Enter your student profile first."
+        };
+
+    }
+
+    const s = studentProfile;
+
+    let reasons = [];
+
+    if(s.cgpa < company.cgpa) {
+
+        reasons.push(
+            `CGPA should be ${company.cgpa}+`
+        );
+
+    }
+
+    if(s.tenth < company.tenth) {
+
+        reasons.push(
+            `10th percentage should be ${company.tenth}%+`
+        );
+
+    }
+
+    if(s.twelfth < company.twelfth) {
+
+        reasons.push(
+            `12th/Diploma percentage should be ${company.twelfth}%+`
+        );
+
+    }
+
+    if(s.backlogs > company.backlogs) {
+
+        reasons.push(
+            `Maximum ${company.backlogs} backlog(s) allowed`
+        );
+
+    }
+
+    if(company.branch === "technical") {
+
+        const technicalBranches = [
+            "CSE",
+            "ISE",
+            "ECE",
+            "EEE",
+            "AI & ML",
+            "Data Science"
+        ];
+
+        if(!technicalBranches.includes(s.branch)) {
+
+            reasons.push(
+                "Technical branch required"
+            );
+
+        }
+
+    }
+
+    return {
+
+        eligible: reasons.length === 0,
+        reason: reasons.length
+            ? reasons.join(" • ")
+            : "You satisfy all listed criteria."
+
+    };
+
+}
+
+
+/* ============================================
+   DISPLAY COMPANIES
+============================================ */
+
+function displayCompanies() {
+
+    const grid = document.getElementById("companyGrid");
+
+    const search =
+        document.getElementById("search").value.toLowerCase();
+
+    const filter =
+        document.getElementById("eligibilityFilter").value;
+
+    let eligible = 0;
+    let notEligible = 0;
+
+    grid.innerHTML = "";
+
+    const filtered = companies.filter(company => {
+
+        const matchesSearch =
+            company.name.toLowerCase().includes(search) ||
+            company.role.toLowerCase().includes(search);
+
+        const result =
+            checkCompanyEligibility(company);
+
+        if(result.eligible) {
+            eligible++;
+        } else {
+            notEligible++;
+        }
+
+        let matchesFilter = true;
+
+        if(filter === "eligible") {
+            matchesFilter = result.eligible;
+        }
+
+        if(filter === "not") {
+            matchesFilter = !result.eligible;
+        }
+
+        return matchesSearch && matchesFilter;
+
+    });
+
+    filtered.forEach(company => {
+
+        const result =
+            checkCompanyEligibility(company);
+
+        const card =
+            document.createElement("div");
+
+        card.className = "company-card";
+
+        card.innerHTML = `
+
+            <div class="company-top">
+
+                <div>
+                    <div class="company-name">
+                        ${company.name}
+                    </div>
+
+                    <div class="company-role">
+                        ${company.role}
+                    </div>
+                </div>
+
+                <span class="status ${
+                    result.eligible
+                    ? "eligible"
+                    : "not-eligible"
+                }">
+
+                    ${
+                        result.eligible
+                        ? "✓ ELIGIBLE"
+                        : "✕ NOT ELIGIBLE"
+                    }
+
+                </span>
+
+            </div>
+
+
+            <div class="criteria">
+
+                <div>
+                    <small>Minimum CGPA</small>
+                    <strong>${company.cgpa}</strong>
+                </div>
+
+                <div>
+                    <small>10th</small>
+                    <strong>${company.tenth}%</strong>
+                </div>
+
+                <div>
+                    <small>12th / Diploma</small>
+                    <strong>${company.twelfth}%</strong>
+                </div>
+
+                <div>
+                    <small>Backlogs</small>
+                    <strong>${company.backlogs}</strong>
+                </div>
+
+            </div>
+
+            ${
+                result.eligible
+                ? `
+                    <div style="
+                        font-size:12px;
+                        color:var(--success);
+                        margin-bottom:12px;
+                    ">
+                        ✓ ${result.reason}
+                    </div>
+                `
+                : `
+                    <div class="reason">
+                        ⚠️ ${result.reason}
+                    </div>
+                `
+            }
+
+            <div class="company-footer">
+
+                <span class="salary">
+                    💰 ${company.salary}
+                </span>
+
+                <button
+                    class="apply-btn"
+                    ${result.eligible ? "" : "disabled"}
+                    onclick="applyCompany('${company.name}')"
+                >
+                    ${result.eligible ? "Apply Now" : "Not Eligible"}
+                </button>
+
+            </div>
+
+        `;
+
+        grid.appendChild(card);
+
+    });
+
+    updateStats(eligible, notEligible);
+
+}
+
+
+/* ============================================
+   UPDATE STATISTICS
+============================================ */
+
+function updateStats(eligible, notEligible) {
+
+    document.getElementById("totalCompanies").innerText =
+        companies.length;
+
+    document.getElementById("eligibleCount").innerText =
+        studentProfile ? eligible : 0;
+
+    document.getElementById("notEligibleCount").innerText =
+        studentProfile ? notEligible : 0;
+
+    const percentage =
+        studentProfile
+        ? Math.round((eligible / companies.length) * 100)
+        : 0;
+
+    document.getElementById("eligibilityPercent").innerText =
+        percentage + "%";
+
+    document.getElementById("progressFill").style.width =
+        percentage + "%";
+
+}
+
+
+/* ============================================
+   SHOW PROFILE
+============================================ */
+
+function showProfile() {
+
+    if(!studentProfile) return;
+
+    const profile =
+        document.getElementById("profileResult");
+
+    profile.style.display = "block";
+
+    document.getElementById("profileName").innerText =
+        studentProfile.name;
+
+    document.getElementById("profileDetails").innerText =
+        `${studentProfile.branch} • CGPA ${studentProfile.cgpa} • Graduation ${studentProfile.year}`;
+
+    document.getElementById("avatar").innerText =
+        studentProfile.name.charAt(0).toUpperCase();
+
+}
+
+
+/* ============================================
+   APPLY
+============================================ */
+
+function applyCompany(companyName) {
+
+    if(!studentProfile) {
+
+        alert("Please enter your profile first.");
+        return;
+
+    }
+
+    document.getElementById("modal").style.display =
+        "flex";
+
+    document.getElementById("modalContent").innerHTML = `
+
+        <div class="success-message">
+
+            <div class="success-icon">🎉</div>
+
+            <h2>Application Ready!</h2>
+
+            <p style="
+                margin:12px 0;
+                color:var(--muted);
+            ">
+                You are eligible to apply for
+                <strong>${companyName}</strong>.
+            </p>
+
+            <p style="
+                font-size:13px;
+                color:var(--muted);
+            ">
+                This demo does not submit applications
+                to real companies.
+            </p>
+
+            <button
+                class="primary-btn"
+                onclick="closeModal()"
+            >
+                Continue
+            </button>
+
+        </div>
+
+    `;
+
+}
+
+
+/* ============================================
+   CLOSE MODAL
+============================================ */
+
+function closeModal() {
+
+    document.getElementById("modal").style.display =
+        "none";
+
+}
+
+
+/* ============================================
+   DARK MODE
+============================================ */
+
+function toggleDarkMode() {
+
+    document.body.classList.toggle("dark");
+
+    localStorage.setItem(
+        "darkMode",
+        document.body.classList.contains("dark")
+    );
+
+}
+
+
+/* ============================================
+   LOAD SAVED PROFILE
+============================================ */
+
+function loadSavedProfile() {
+
+    const saved =
+        localStorage.getItem("studentProfile");
+
+    if(!saved) return;
+
+    try {
+
+        studentProfile = JSON.parse(saved);
+
+        document.getElementById("name").value =
+            studentProfile.name || "";
+
+        document.getElementById("email").value =
+            studentProfile.email || "";
+
+        document.getElementById("branch").value =
+            studentProfile.branch || "";
+
+        document.getElementById("year").value =
+            studentProfile.year || "";
+
+        document.getElementById("cgpa").value =
+            studentProfile.cgpa || "";
+
+        document.getElementById("tenth").value =
+            studentProfile.tenth || "";
+
+        document.getElementById("twelfth").value =
+            studentProfile.twelfth || "";
+
+        document.getElementById("backlogs").value =
+            studentProfile.backlogs ?? "";
+
+        if(studentProfile.skills) {
+
+            document.querySelectorAll(".skill")
+            .forEach(skill => {
+
+                if(studentProfile.skills.includes(
+                    skill.innerText
+                )) {
+
+                    skill.classList.add("active");
+
+                }
+
+            });
+
+        }
+
+        showProfile();
+
+    }
+    catch(error) {
+
+        console.log("Could not load profile.");
+
+    }
+
+}
+
+
+/* ============================================
+   RESET EVERYTHING
+============================================ */
+
+function resetAll() {
+
+    if(!confirm(
+        "Are you sure you want to reset your profile?"
+    )) {
+
+        return;
+
+    }
+
+    localStorage.removeItem("studentProfile");
+
+    studentProfile = null;
+
+    document.querySelectorAll("input")
+        .forEach(input => input.value = "");
+
+    document.querySelectorAll("select")
+        .forEach(select => select.selectedIndex = 0);
+
+    document.querySelectorAll(".skill")
+        .forEach(skill =>
+            skill.classList.remove("active")
+        );
+
+    document.getElementById("profileResult")
+        .style.display = "none";
+
+    document.getElementById("eligibilityFilter")
+        .value = "all";
+
+    displayCompanies();
+
+}
+
+
+/* ============================================
+   CLOSE MODAL WHEN CLICKING OUTSIDE
+============================================ */
+
+window.onclick = function(event) {
+
+    const modal =
+        document.getElementById("modal");
+
+    if(event.target === modal) {
+
+        closeModal();
+
+    }
+
+};
+
+</script>
+
+</body>
+</html>
